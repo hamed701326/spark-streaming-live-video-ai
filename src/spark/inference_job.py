@@ -1,6 +1,9 @@
 from uuid import UUID
 
 from cassandra.cluster import Cluster
+import sys
+sys.path.append('../../')
+sys.path.append('../')
 import cfg
 from inference_helper import load_models, run_inferences
 from pyspark.sql import SparkSession

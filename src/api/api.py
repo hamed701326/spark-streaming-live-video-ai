@@ -136,8 +136,9 @@ def get_rtmp_endpoint():
 
     video_id = uuid.uuid4()
     models_to_run = request.json['modelsToRun']
-    video_name = request.json['videoName']
-    public_rtmp_endpoint = f'rtmp://localhost/live/{video_id}'
+    video_name = 'r1Pwu9ukh'
+    camera_ip = request.json['cameraIp']
+    public_rtmp_endpoint = f'rtmp://178.131.137.176/live/r1Pwu9ukh'
     nginx_rtmp_endpoint = f'rtmp://{os.getenv("NGINX_HOST")}/live/{video_id}'
     frame_step = get_frame_step()
 

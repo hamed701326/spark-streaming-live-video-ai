@@ -4,7 +4,9 @@ import math
 import sys
 import time
 from uuid import UUID
-
+print(sys.path)
+sys.path.append('../../')
+sys.path.append('../')
 from cassandra.cluster import Cluster
 import cfg
 import cv2

@@ -1,5 +1,7 @@
 FROM node:latest
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 RUN apt-get update
 RUN apt-get install 'ffmpeg' -y
 

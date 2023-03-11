@@ -8,6 +8,8 @@ services:
   # API
   api:
     build: ./api
+    image: api
+    container_name: api
     ports:
       - "8000:8000"
     environment:
@@ -31,6 +33,7 @@ services:
 
   # Cassandra
   cassandra:
+    container_name: cassandra
     image: cassandra:3.11
     volumes:
       - ./data/cassandra/:/var/lib/cassandra
@@ -46,6 +49,7 @@ services:
 
   # Kafka
   zookeeper:
+    container_name: zookeeper
     image: "bitnami/zookeeper:latest"
     ports:
       - "2181:2181"
@@ -53,6 +57,7 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
     image: "bitnami/kafka:latest"
+    container_name: kafka
     ports:
       - "9092:9092"
     environment:
@@ -67,6 +72,7 @@ services:
   # spark
   spark:
     build: ./spark
+    container_name: spark
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -92,10 +98,13 @@ services:
       - "8082:4040"     # Job #1 UI
       - "8083:4041"     # Job #2 UI
       - "8084:4042"     # Job #3 UI
+      - "7077:7077"     # spark master
     volumes:
       - ./spark:/opt/bitnami/spark/spark-jobs
+      - ./spark/cfg.py:/opt/bitnami/spark/python/cfg.py
   spark-worker-1:
     build: ./spark
+    container_name: spark-worker-1
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark:7077
@@ -121,10 +130,13 @@ services:
       - INFERENCE_JOB_REPARTITION
     volumes:
       - ./data/frames:/opt/bitnami/spark/frames
+      - ./spark/cfg.py:/opt/bitnami/spark/python/cfg.py
+      - ./spark/cfg.zip:/opt/bitnami/spark/python/lib/cfg.zip
     ports:
       - "8085:8081"
   spark-worker-2:
     build: ./spark
+    container_name: spark-worker-2
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark:7077
@@ -150,10 +162,13 @@ services:
       - INFERENCE_JOB_REPARTITION
     volumes:
       - ./data/frames:/opt/bitnami/spark/frames
+      - ./spark/cfg.py:/opt/bitnami/spark/python/cfg.py
+      - ./spark/cfg.zip:/opt/bitnami/spark/python/lib/cfg.zip
     ports:
       - "8086:8081"
   spark-worker-3:
     build: ./spark
+    container_name: spark-worker-3
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark:7077
@@ -179,10 +194,13 @@ services:
       - INFERENCE_JOB_REPARTITION
     volumes:
       - ./data/frames:/opt/bitnami/spark/frames
+      - ./spark/cfg.py:/opt/bitnami/spark/python/cfg.py
+      - ./spark/cfg.zip:/opt/bitnami/spark/python/lib/cfg.zip
     ports:
       - "8087:8081"
   spark-worker-4:
     build: ./spark
+    container_name: spark-worker-4
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark:7077
@@ -206,11 +224,16 @@ services:
       - INGEST_JOB_REPARTITION
       - STORAGE_JOB_REPARTITION
       - INFERENCE_JOB_REPARTITION
+    volumes:
+      - ./spark/cfg.py:/opt/bitnami/spark/python/cfg.py
+      - ./spark/cfg.zip:/opt/bitnami/spark/python/lib/cfg.zip
+      - ./data/frames:/opt/bitnami/spark/frames
     ports:
       - "8088:8081"
   # RTMP nginx
   nginx:
     image: tiangolo/nginx-rtmp
+    container_name: nginx
     restart: unless-stopped
     ports:
       - "1935:1935"
@@ -218,6 +241,7 @@ services:
       - nginx-conf:/etc/nginx
   # Video App
   video-app:
+    container_name: video-app
     build: ./video-app
     ports:
       - '8080:8080'
